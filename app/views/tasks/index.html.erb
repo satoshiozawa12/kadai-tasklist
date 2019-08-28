@@ -1,16 +1,21 @@
 <% if logged_in? %>
-  <div class="row">
-    <aside class="col-sm-4">
-      <%= form_with(model: @task, local: true) do |f| %>
-        <div class="form-group">
-          <%= f.text_area :content, class: 'form-control', rows: 5 %>
-        </div>
-        <%= f.submit 'Post', class: 'btn btn-primary btn-block' %>
-      <% end %>
-    </aside>
-    <div class="col-sm-8">
-      <%= render 'tasks/tasks', tasks: @tasks %>
-    </div>
+  
+        
+        
+        <h1>メッセージ一覧</h1>
+
+        <ul>
+          <% @tasks.each do |task| %>
+            <li><%= current_user.name %> : <%= link_to task.id, task %> : <%= task.content %>&gt; <%= task.status %></li>
+          <% end %>
+        </ul>
+        
+        <%= link_to '新規タスクの投稿', new_task_path %>
+        
+        
+      
+    
+    
   </div>
 <% else %>
   <div class="center jumbotron">

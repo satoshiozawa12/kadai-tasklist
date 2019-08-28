@@ -10,31 +10,32 @@ class TasksController < ApplicationController
   end
 
   def show
-    set_task
+    @task = Task.find(params[:id])
   end
 
   def new
-    @tasks = Task.new
+    @task = Task.new
   end
 
   def create
     @task = current_user.tasks.build(task_params)
     if @task.save
-      flash[:success] = 'メッセージを投稿しました。'
+      flash[:success] = 'タスクを投稿しました。'
       redirect_to root_url
     else
       @tasks = current_user.tasks.order(id: :desc).page(params[:page])
-      flash.now[:danger] = 'メッセージの投稿に失敗しました。'
-      render 'toppages/index'
+      flash.now[:danger] = 'タスクは投稿されませんでした。'
+      render :new
     end
   end
 
   def edit
-    set_task
+    @task = Task.find(params[:id])
   end
 
   def update
-    set_task
+    @task = Task.find(params[:id])
+    
     if @task.update(task_params)
       flash[:success] = 'Task は正常に更新されました'
       redirect_to @task
@@ -45,15 +46,17 @@ class TasksController < ApplicationController
   end
 
   def destroy
+    @task = Task.find(params[:id])
     @task.destroy
-    flash[:success] = 'メッセージを削除しました。'
-    redirect_back(fallback_location: root_path)
+
+    flash[:success] = 'Task は正常に削除されました'
+    redirect_to tasks_url
   end
 
   private
 
   def task_params
-    params.require(:task).permit(:content)
+    params.require(:task).permit(:content, :status)
   end
 
   def correct_user
